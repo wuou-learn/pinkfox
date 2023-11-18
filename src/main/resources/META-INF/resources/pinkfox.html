@@ -30,7 +30,7 @@
     <div class="head">
         <div class="platform">
             <div>pinkfox</div>
-            <div class="debug-intro"><span><a target="_blank" href="https://github.com/zhusong/pinkfox">使用文档</a></span></div>
+            <div class="debug-intro"><span><a target="_blank" href="https://github.com/wuou-learn/pinkfox">使用文档</a></span></div>
         </div>
 
     </div>
@@ -115,7 +115,7 @@
                                 <div class="debug-context-item"><span class="debug-context-item-desc">当前展示的类:</span><span>{{this.shownClass}}</span></div>
                                 <div class="debug-context-item"><span class="debug-context-item-desc">是否mute所有断点:</span><span>{{this.breakPointsMute}}</span></div>
                                 <div class="debug-context-item"><span class="debug-context-item-desc">是否断点发生变化:</span><span>{{this.changing}}</span></div>
-                                <div class="debug-context-item"><span class="debug-context-item-desc">排障dump:</span><span><a href="/pinkfoxDump">下载</a></span></div>
+                                <div class="debug-context-item"><span class="debug-context-item-desc">排障dump:</span><span><a href="/pinkfox/dump">下载</a></span></div>
                             </div>
                             <!-- <div>当前类的数据:{{this.changing}}</div> -->
                         </div>
@@ -226,7 +226,7 @@
           }
         },
         async mounted(){
-          this.debugingLog = "欢迎使用pinkfox，在使用中有任何问题，github地址: https://github.com/zhusong/pinkfox。\n\n";
+          this.debugingLog = "欢迎使用pinkfox，在使用中有任何问题，github地址: https://github.com/wuou-learn/pinkfox。\n\n";
           this.getContextTimer = setInterval(this.lightQuery, 200);
           window.breakPointClicked = this.breakPointClicked;
           this.requestDir();
@@ -248,7 +248,7 @@
             if(!fullVariableName){
                 return;
             }
-            let result = await this.fetchRemote('/pinkfoxVariableJsonPrint?variable=' + fullVariableName);
+            let result = await this.fetchRemote('/pinkfox/variableJsonPrint?variable=' + fullVariableName);
             if(result.code === 0 && result.data){
                 for(let item of this.variables){
                     if(item.fullName == fullVariableName){
@@ -261,7 +261,7 @@
 
           async selectTrigger(){
             this.shownClass = this.searchingInputValue;
-            let result = await this.fetchRemote('/pinkfoxRequestHtml?classFullQualifiedName='+this.shownClass);
+            let result = await this.fetchRemote('/pinkfox/requestHtml?classFullQualifiedName='+this.shownClass);
             if(result.code === 0 && result.data){
               this.htmlSourceCode = PR.prettyPrintOne(result.data.htmlSource);
               //默认展开的节点
@@ -278,7 +278,7 @@
               return;
             }
             this.searchingLoading = true;
-            let result = await this.fetchRemote('/pinkfoxSearching?query=' + query);
+            let result = await this.fetchRemote('/pinkfox/searching?query=' + query);
             if(result.code === 0 && result.data){
               this.searchingOptions = result.data;
             }
@@ -295,7 +295,7 @@
                 }
                 this.requestingContext = true;
                 let classFullQualifiedName = this.shownClass;
-                let result = await this.fetchRemote('/pinkfoxRequestExecutingContext?classFullQualifiedName='+classFullQualifiedName);
+                let result = await this.fetchRemote('/pinkfox/requestExecutingContext?classFullQualifiedName='+classFullQualifiedName);
                 if(result.code === 0){
                   //是否debug中
                   this.isDebuging = result.data.debuging;
@@ -378,7 +378,7 @@
 
             //展示的类换成点击的这个
             this.shownClass = classFullQualifiedName;
-            let result = await this.fetchRemote('/pinkfoxRequestHtml?classFullQualifiedName=' + classFullQualifiedName);
+            let result = await this.fetchRemote('/pinkfox/requestHtml?classFullQualifiedName=' + classFullQualifiedName);
             if(result.code === 0 && result.data){
               this.htmlSourceCode = PR.prettyPrintOne(result.data.htmlSource);
               if(this.shownClass == this.debugingClass){
@@ -388,7 +388,7 @@
           },
 
           async lightQuery(){
-            let result = await this.fetchRemote('/pinkfoxLightQuery');
+            let result = await this.fetchRemote('/pinkfox/lightQuery');
             if(result.code === 0 && result.data){
                 if(result.data.changing){
                   setTimeout(() => {
@@ -401,7 +401,7 @@
           async expandQueryHtml(classFullQualifiedName, debugingPointIndex, id){
             this.shownClass = classFullQualifiedName;
             this.debugingPointIndex = debugingPointIndex;
-            let result = await this.fetchRemote('/pinkfoxRequestHtml?classFullQualifiedName='+classFullQualifiedName);
+            let result = await this.fetchRemote('/pinkfox/requestHtml?classFullQualifiedName='+classFullQualifiedName);
             if(result.code === 0 && result.data){
               this.htmlSourceCode = PR.prettyPrintOne(result.data.htmlSource);
               //默认展开的节点
@@ -417,11 +417,11 @@
           },
 
           async clearLog(){
-            //this.debugingLog = "欢迎使用pinkfox，在使用中有任何问题，github地址: https://github.com/zhusong/pinkfox。\n\n";
+            //this.debugingLog = "欢迎使用pinkfox，在使用中有任何问题，github地址: https://github.com/wuou-learn/pinkfox。\n\n";
           },
 
         async scrollLog() {
-            let result = await this.fetchRemote('/pinkfoxLog');
+            let result = await this.fetchRemote('/pinkfox/log');
             if (result.data) {
                 this.debugingLog = this.debugingLog + result.data
             }
@@ -434,7 +434,7 @@
         },
 
           async requestDir(){
-            let result = await this.fetchRemote('/pinkfoxRequestDir');
+            let result = await this.fetchRemote('/pinkfox/requestDir');
             if(result.code === 0 && result.data){
               this.pathTree.push(result.data.root);
                 setTimeout(() => {
@@ -444,7 +444,7 @@
           },
 
           async clearBreakPoints(){
-            let result = await this.fetchRemote('/pinkfoxClearAllBreakPoint');
+            let result = await this.fetchRemote('/pinkfox/clearAllBreakPoint');
             if(result.code === 0){
               // this.allBreakPoints(); 
               // this.queryHtml();
@@ -455,7 +455,7 @@
           },
 
           async muteBreakpoints(){
-            let result = await this.fetchRemote('/pinkfoxMuteAllBreakPoint');
+            let result = await this.fetchRemote('/pinkfox/muteAllBreakPoint');
             if(result.code === 0){
               setTimeout(() => {
                 this.queryContext();
@@ -464,7 +464,7 @@
           },
 
           async cancelMuteBreakpoints(){
-            let result = await this.fetchRemote('/pinkfoxCancelMuteAllBreakPoint');
+            let result = await this.fetchRemote('/pinkfox/cancelMuteAllBreakPoint');
             if(result.code === 0){
                 setTimeout(() => {
                     this.queryContext();
@@ -556,7 +556,7 @@
             },
 
           async addBreakPoint(classFullQualifiedName, pointIndex){
-              let result = await this.fetchRemote('/pinkfoxAddBreakPoint?classFullQualifiedName=' + classFullQualifiedName + '&pointIndex=' + pointIndex);
+              let result = await this.fetchRemote('/pinkfox/addBreakPoint?classFullQualifiedName=' + classFullQualifiedName + '&pointIndex=' + pointIndex);
               if(result.code === 0){
                   setTimeout(() => {
                     this.queryContext();
@@ -564,7 +564,7 @@
               }
           },
           async addBreakPointExpression(classFullQualifiedName, pointIndex, expression){
-              let result = await this.fetchRemote('/pinkfoxAddBreakPointExpression?classFullQualifiedName=' + classFullQualifiedName + '&pointIndex=' + pointIndex + '&expression=' + expression);
+              let result = await this.fetchRemote('/pinkfox/addBreakPointExpression?classFullQualifiedName=' + classFullQualifiedName + '&pointIndex=' + pointIndex + '&expression=' + expression);
               if(result.code === 0){
                   setTimeout(() => {
                       this.queryContext();
@@ -573,14 +573,14 @@
           },
 
           async getBreakPointExpression(classFullQualifiedName, pointIndex){
-              let result = await this.fetchRemote('/pinkfoxGetBreakPointExpression?classFullQualifiedName=' + classFullQualifiedName + '&pointIndex=' + pointIndex);
+              let result = await this.fetchRemote('/pinkfox/getBreakPointExpression?classFullQualifiedName=' + classFullQualifiedName + '&pointIndex=' + pointIndex);
               if(result.code === 0 && result.data){
                    return result.data.expression;
               }
           },
 
           async removeBreakPoint(classFullQualifiedName, pointIndex){
-              let result = await this.fetchRemote('/pinkfoxRemoveBreakPoint?classFullQualifiedName=' + classFullQualifiedName + '&pointIndex=' + pointIndex);
+              let result = await this.fetchRemote('/pinkfox/removeBreakPoint?classFullQualifiedName=' + classFullQualifiedName + '&pointIndex=' + pointIndex);
               if(result.code === 0){
                   setTimeout(() => {
                     this.queryContext();
@@ -597,7 +597,7 @@
             this.tab = type;
           },
           async stepOver(){
-            let result = await this.fetchRemote('/pinkfoxStepOver');
+            let result = await this.fetchRemote('/pinkfox/stepOver');
             if(result.code === 0){
             setTimeout(() => {
                     this.queryContext();
@@ -606,7 +606,7 @@
           },
 
           async stepInto(){
-              let result = await this.fetchRemote('/pinkfoxStepInto');
+              let result = await this.fetchRemote('/pinkfox/stepInto');
               if(result.code === 0){
                 setTimeout(() => {
                    this.queryContext();
@@ -615,7 +615,7 @@
           },
 
           async stepOut(){
-              let result = await this.fetchRemote('/pinkfoxStepOut');
+              let result = await this.fetchRemote('/pinkfox/stepOut');
               if(result.code === 0){
                 setTimeout(() => {
                     this.queryContext();
@@ -624,7 +624,7 @@
           },
 
           async resume(){
-              let result = await this.fetchRemote('/pinkfoxResume');
+              let result = await this.fetchRemote('/pinkfox/resume');
               if(result.code === 0){
                  setTimeout(() => {
                     this.queryContext();
@@ -633,7 +633,7 @@
           },
 
           async stop(){
-              let result = await this.fetchRemote('/pinkfoxStop');
+              let result = await this.fetchRemote('/pinkfox/stop');
               if(result.code === 0){
                  setTimeout(() => {
                     this.queryContext();
@@ -642,7 +642,7 @@
           },
           
           async flush(){
-              let result = await this.fetchRemote('/pinkfoxFlush');
+              let result = await this.fetchRemote('/pinkfox/flush');
               if(result.code === 0){
                  setTimeout(() => {
                     this.queryContext();
@@ -651,7 +651,7 @@
           },
 
           async queryVariables(){
-              let result = await this.fetchRemote('/pinkfoxVariables');
+              let result = await this.fetchRemote('/pinkfox/variables');
               if(result.code === 0 && result.data){
                 this.variables = result.data;
               }
