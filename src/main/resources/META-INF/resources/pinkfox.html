@@ -226,7 +226,7 @@
           }
         },
         async mounted(){
-          this.debugingLog = "欢迎使用pinkfox，在使用中有任何问题，github地址: https://github.com/wuou-learn/pinkfox。\n\n";
+          this.debugingLog = "欢迎使用pinkfox \n\n";
           this.getContextTimer = setInterval(this.lightQuery, 200);
           window.breakPointClicked = this.breakPointClicked;
           this.requestDir();
@@ -389,6 +389,10 @@
 
           async lightQuery(){
             let result = await this.fetchRemote('/pinkfox/lightQuery');
+            if (result.status === 404) {
+              clearInterval(this.getContextTimer);
+              return;
+            }
             if(result.code === 0 && result.data){
                 if(result.data.changing){
                   setTimeout(() => {
@@ -417,7 +421,7 @@
           },
 
           async clearLog(){
-            //this.debugingLog = "欢迎使用pinkfox，在使用中有任何问题，github地址: https://github.com/wuou-learn/pinkfox。\n\n";
+            //this.debugingLog = "欢迎使用pinkfox \n\n";
           },
 
         async scrollLog() {

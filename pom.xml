@@ -12,6 +12,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
+        <jdk.lib.path>${java.home}/../lib/tools.jar</jdk.lib.path>
     </properties>
 
     <build>
@@ -82,7 +83,7 @@
             <version>1.8</version>
             <scope>system</scope>
             <optional>true</optional>
-            <systemPath>${java.home}/../lib/tools.jar</systemPath>
+            <systemPath>${jdk.lib.path}</systemPath>
         </dependency>
 
     </dependencies>
