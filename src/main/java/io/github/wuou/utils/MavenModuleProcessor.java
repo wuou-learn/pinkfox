@@ -4,8 +4,6 @@ import com.sun.tools.javac.code.Symbol;
 
 import javax.lang.model.element.Element;
 import javax.tools.JavaFileObject;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class MavenModuleProcessor {
 

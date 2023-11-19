@@ -1,8 +1,9 @@
 源项目地址：https://github.com/zhusong/pinkfox
-> 本项目与源项目99%相同,本项目只做了两件事情
-- 将源项目中hang住的线程自动放行,将当前断点的变量信息打印至控制台,以达到不阻塞线程的效果.
+> 本项目与源项目99%相同,本项目只做了如下事情
+- 将源项目中hang住的线程自动放行,将当前断点的变量信息打印至控制台.
 - 将所有servlet增加/pinkfox前缀
 - 判断response status=404未开启pinkfox停止继续请求
+- load相关jar依赖是否引入本项目,将其源码加入pinkfox
 
 <div align="center">
 

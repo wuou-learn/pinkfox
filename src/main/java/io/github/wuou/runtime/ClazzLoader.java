@@ -1,6 +1,8 @@
 package io.github.wuou.runtime;
 
+import com.google.common.collect.Maps;
 import io.github.wuou.clazz.Clazz;
+import io.github.wuou.utils.MapUtils;
 
 import java.io.*;
 import java.net.JarURLConnection;
@@ -9,6 +11,7 @@ import java.net.URLDecoder;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -52,4 +55,55 @@ public class ClazzLoader {
         }
         return clazzMap;
     }
+
+    @SuppressWarnings("unchecked")
+    public static Map<String, Clazz> loadDependenceClasses() {
+        Map<String, Clazz> clazzMap = Maps.newHashMap();
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        Enumeration<URL> resources = null;
+        try {
+            resources = classLoader.getResources("BOOT-INF/lib");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (Objects.isNull(resources)) {
+            return clazzMap;
+        }
+        while (resources.hasMoreElements()) {
+            URL url = resources.nextElement();
+            if ("jar".equals(url.getProtocol())) {
+                try {
+                    JarFile jarFile = ((JarURLConnection) url.openConnection()).getJarFile();
+                    Enumeration<URL> classesMapUrls = classLoader.getResources("BOOT-INF/classes/META-INF/services/io.github.wuou.ClassMap");
+                    Map<String, Clazz> stringClazzMap = loadClazzMap(classesMapUrls, jarFile);
+                    if (!MapUtils.isEmpty(stringClazzMap)) {
+                        clazzMap.putAll(stringClazzMap);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return clazzMap;
+    }
+
+    private static Map<String, Clazz> loadClazzMap(Enumeration<URL> classesMapUrls, JarFile jarFile) throws IOException, ClassNotFoundException {
+        while (classesMapUrls.hasMoreElements()) {
+            URL classesMapUrl = classesMapUrls.nextElement();
+            JarEntry jarEntry = ((JarURLConnection) classesMapUrl.openConnection()).getJarEntry();
+            InputStream inputStream = jarFile.getInputStream(jarEntry);
+            if (Objects.isNull(inputStream)) {
+                continue;
+            }
+            ObjectInputStream ois = new ObjectInputStream(inputStream);
+            Map<String, Clazz> res = (Map<String, Clazz>) ois.readObject();
+            ois.close();
+            inputStream.close();
+            if (!MapUtils.isEmpty(res)) {
+                return res;
+            }
+        }
+        return null;
+    }
+
 }

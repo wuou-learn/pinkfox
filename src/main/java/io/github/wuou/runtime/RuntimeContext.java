@@ -35,8 +35,8 @@ public class RuntimeContext {
     protected static final Object lock = new Object();
 
     static {
-        //Load all compiled classes.
-        clazzMap = ClazzLoader.loadClasses();
+        // load all and dependence compiled classes
+        clazzMap = ClazzLoader.loadDependenceClasses();
         clazzTree = new ClazzTree(new ClazzNode("Root", "root"));
         for (Map.Entry<String, Clazz> entry : clazzMap.entrySet()) {
             clazzTree.addElement(entry.getValue().getModuleName() + "/src/main/java/" + entry.getValue().getClassFullQualifiedName().replaceAll("\\.", "/") + ".java");
